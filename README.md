@@ -32,3 +32,8 @@ Web: http://localhost:3000 · API: http://localhost:4000 · Health: http://local
 
 Hozirgi orkestrator MVP uchun qoida asosida ishlaydi. Haqiqiy AI va tashqi servis amallari `apps/api/src/services` qatlamiga adapter sifatida ulanadi. Maxfiy kalitlarni Git’ga yubormang.
 
+## Professional reja
+
+- [Master development plan](docs/MASTER_PLAN.md)
+- [Target arxitektura](docs/ARCHITECTURE.md)
+- [Security baseline](docs/SECURITY.md)
