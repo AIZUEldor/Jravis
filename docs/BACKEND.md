@@ -3,6 +3,7 @@
 ## Hozir mavjud qatlamlar
 
 - `packages/contracts` — Zod schemas va umumiy domain turlari.
+- `packages/brain-core` — intent routing, confidence, entity extraction va clarification.
 - `packages/policy-engine` — LLM’dan mustaqil deterministic risk qarorlari.
 - `packages/mcp-gateway` — trusted provider registry va capability router.
 - `apps/api/src/domain` — intent aniqlash va execution plan yaratish.
@@ -48,6 +49,10 @@ Invoke-RestMethod -Method Post -Uri "http://localhost:4000/v1/plans/$planId/deci
 |---|---|---|
 | GET | `/health` | Liveness |
 | GET | `/ready` | Provider readiness |
+| POST | `/v1/auth/register` | Development hisob yaratish |
+| POST | `/v1/auth/login` | Opaque session olish |
+| GET | `/v1/auth/me` | Joriy user |
+| POST | `/v1/auth/logout` | Session revoke |
 | POST | `/v1/commands` | Buyruqni validation va plan qilish |
 | GET | `/v1/plans` | Development plan ro‘yxati |
 | GET | `/v1/plans/:planId` | Plan preview |
@@ -62,4 +67,3 @@ Invoke-RestMethod -Method Post -Uri "http://localhost:4000/v1/plans/$planId/deci
 4. MCP SDK remote transport, OAuth broker va tool discovery.
 5. OpenAPI schema va generated clients.
 6. Audit hash-chain va retention.
-

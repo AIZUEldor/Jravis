@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@fastify/cors": "^11.1.0",
+    "@jravis/brain-core": "*",
     "@jravis/contracts": "*",
     "@jravis/mcp-gateway": "*",
     "@jravis/policy-engine": "*",

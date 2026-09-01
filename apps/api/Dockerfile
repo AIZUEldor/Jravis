@@ -5,6 +5,7 @@ COPY apps/api/package.json apps/api/package.json
 COPY apps/web/package.json apps/web/package.json
 COPY apps/mobile/package.json apps/mobile/package.json
 COPY packages/contracts/package.json packages/contracts/package.json
+COPY packages/brain-core/package.json packages/brain-core/package.json
 COPY packages/policy-engine/package.json packages/policy-engine/package.json
 COPY packages/mcp-gateway/package.json packages/mcp-gateway/package.json
 RUN npm ci
@@ -21,4 +22,3 @@ COPY --from=build /app/apps/api/package.json ./apps/api/package.json
 COPY --from=build /app/packages ./packages
 EXPOSE 4000
 CMD ["node", "apps/api/dist/server.js"]
-

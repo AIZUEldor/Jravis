@@ -4,7 +4,14 @@ export const commandSourceSchema = z.enum(["text", "voice"]);
 export const intentKindSchema = z.enum(["task", "reminder", "note", "automation", "media", "message"]);
 export const riskLevelSchema = z.enum(["L0", "L1", "L2", "L3", "L4", "L5"]);
 export const approvalModeSchema = z.enum(["DENY", "ASK_ONCE", "ASK_EVERY_TIME", "ALLOW_SESSION", "ALLOW_RULE"]);
-export const planStatusSchema = z.enum(["awaiting_approval", "approved", "running", "succeeded", "failed", "denied"]);
+export const planStatusSchema = z.enum(["clarification_required", "awaiting_approval", "approved", "running", "succeeded", "failed", "denied"]);
+
+export const registerInputSchema = z.object({
+  name: z.string().trim().min(2).max(100),
+  email: z.string().trim().toLowerCase().email().max(254),
+  password: z.string().min(10).max(128)
+});
+export const loginInputSchema = z.object({ email: z.string().trim().toLowerCase().email(), password: z.string().min(1).max(128) });
 
 export const commandInputSchema = z.object({
   text: z.string().trim().min(1).max(4000),
@@ -51,17 +58,30 @@ export type Capability = z.infer<typeof capabilitySchema>;
 export type PlanStep = z.infer<typeof planStepSchema>;
 export type ExecutionPlan = z.infer<typeof executionPlanSchema>;
 export type ApprovalInput = z.infer<typeof approvalInputSchema>;
+export type RegisterInput = z.infer<typeof registerInputSchema>;
+export type LoginInput = z.infer<typeof loginInputSchema>;
 
-export type CommandResult = { id: string; plan: ExecutionPlan; status: "planned"; createdAt: string };
+export type User = { id: string; name: string; email: string; createdAt: string };
+export type AuthResult = { token: string; expiresAt: string; user: User };
+export type BrainDecision = {
+  intent: IntentKind;
+  confidence: number;
+  rationale: string;
+  capabilityNames: string[];
+  entities: Record<string, string>;
+  missingFields: string[];
+  clarificationQuestion?: string;
+};
+
+export type CommandResult = { id: string; plan: ExecutionPlan; brain: BrainDecision; status: "planned" | "clarification_required"; createdAt: string };
 export type ToolExecutionResult = { executionId: string; provider: string; output: Record<string, unknown>; verified: boolean; completedAt: string };
 export type AuditEvent = {
   id: string;
-  type: "command.created" | "plan.approved" | "plan.denied" | "tool.started" | "tool.succeeded" | "tool.failed";
+  type: "auth.registered" | "auth.login" | "auth.logout" | "command.created" | "plan.approved" | "plan.denied" | "tool.started" | "tool.succeeded" | "tool.failed";
   actorId: string;
-  commandId: string;
-  planId: string;
+  commandId?: string;
+  planId?: string;
   stepId?: string;
   metadata: Record<string, unknown>;
   createdAt: string;
 };
-

@@ -27,8 +27,8 @@ export function createFakeProvider(): ToolProvider {
     { name: "clock.alarm.create", version: "1.0.0", risk: "L2", description: "Create an alarm", supportsDryRun: true },
     { name: "automation.create", version: "1.0.0", risk: "L2", description: "Create a deterministic workflow", supportsDryRun: true },
     { name: "media.render_video", version: "1.0.0", risk: "L2", description: "Render video from selected media", supportsDryRun: true },
+    { name: "social.instagram.publish", version: "1.0.0", risk: "L3", description: "Publish approved media to Instagram", supportsDryRun: true },
     { name: "messaging.telegram.send", version: "1.0.0", risk: "L3", description: "Send Telegram message", supportsDryRun: true }
   ];
   return { id: "fake.local", trusted: true, capabilities, async execute(capability, input, idempotencyKey) { return { executionId: crypto.randomUUID(), provider: "fake.local", output: { capability, input, idempotencyKey, simulated: true }, verified: true, completedAt: new Date().toISOString() }; } };
 }
-

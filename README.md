@@ -38,3 +38,4 @@ Hozirgi orkestrator MVP uchun qoida asosida ishlaydi. Haqiqiy AI va tashqi servi
 - [Target arxitektura](docs/ARCHITECTURE.md)
 - [Security baseline](docs/SECURITY.md)
 - [Backend development guide](docs/BACKEND.md)
+- [Central Brain v1](docs/CENTRAL_BRAIN.md)
