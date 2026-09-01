@@ -1,0 +1,4 @@
+{
+  "expo": { "name": "Jravis", "slug": "jravis", "scheme": "jravis", "version": "0.1.0", "orientation": "portrait", "userInterfaceStyle": "dark", "plugins": ["expo-router"], "ios": { "supportsTablet": true, "bundleIdentifier": "uz.jravis.app" }, "android": { "package": "uz.jravis.app" } }
+}
+

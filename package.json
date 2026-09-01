@@ -1,0 +1,22 @@
+{
+  "name": "jravis",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Voice and text driven second-brain automation platform",
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev": "concurrently -n api,web,mobile -c blue,green,magenta \"npm run dev -w @jravis/api\" \"npm run dev -w @jravis/web\" \"npm run dev -w @jravis/mobile\"",
+    "dev:web": "concurrently -n api,web -c blue,green \"npm run dev -w @jravis/api\" \"npm run dev -w @jravis/web\"",
+    "build": "npm run build -w @jravis/contracts && npm run build -w @jravis/api && npm run build -w @jravis/web",
+    "typecheck": "npm run build -w @jravis/contracts && npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "format": "prettier --write .",
+    "check": "npm run typecheck && npm run test && npm run build"
+  },
+  "engines": { "node": ">=22" },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.2"
+  }
+}
