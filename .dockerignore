@@ -1,0 +1,11 @@
+.git
+.github
+.next
+.expo
+node_modules
+dist
+coverage
+.env
+*.log
+*.tsbuildinfo
+

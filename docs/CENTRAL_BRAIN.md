@@ -48,8 +48,7 @@ Recipient, vaqt yoki intent yetishmasa plan `clarification_required` bo‘ladi v
 
 ## Development cheklovlari
 
-- User, session, plan va audit process memory’da; restart’da yo‘qoladi.
+- `DATABASE_URL` bilan user, session, plan va audit PostgreSQL’da persistent; testsiz lokal rejimda memory fallback mavjud.
 - Fake MCP faqat simulyatsiya qiladi; real servis amali yo‘q.
 - Web tokeni `sessionStorage`da; production’da same-origin BFF + HttpOnly Secure cookie kerak.
 - Routing deterministik v1; AI adapter hali ulanmagan.
-

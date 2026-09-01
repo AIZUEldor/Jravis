@@ -10,13 +10,14 @@
 - `apps/api/src/services` — orchestration, development store va audit.
 - `apps/api/src/app.ts` — HTTP boundary va validation.
 
-`MemoryStore` faqat birinchi development skeleti uchun. Keyingi backend sprintida PostgreSQL repository va queue worker bilan almashtiriladi.
+Persistence `DATABASE_URL` mavjud bo‘lsa PostgreSQL, mavjud bo‘lmasa development/test uchun `MemoryStore` tanlaydi. Production muhitida `DATABASE_URL` majburiy. User, token hash, plan, execution va audit PostgreSQL’da saqlanadi.
 
 ## Lokal ishga tushirish
 
 ```powershell
 Copy-Item .env.example .env
 npm install
+npm run db:migrate
 npm run dev:api
 ```
 
@@ -27,6 +28,10 @@ API `http://localhost:4000` da ishlaydi.
 ```powershell
 docker compose up --build
 ```
+
+Bu buyruq PostgreSQL 18 containerini, migrationlarni va API’ni birga ishga tushiradi. Lokal PostgreSQL ishlatilsa `.env` ichidagi `DATABASE_URL` uchun avval `jravis` database/user yaratilishi kerak.
+
+CI alohida PostgreSQL service’da register → restart → session restore integratsion testini bajaradi. Lokal muhitda xuddi shu test `TEST_DATABASE_URL` berilganda avtomatik yoqiladi.
 
 ## API oqimini tekshirish
 
@@ -61,9 +66,8 @@ Invoke-RestMethod -Method Post -Uri "http://localhost:4000/v1/plans/$planId/deci
 
 ## Keyingi implementatsiya tartibi
 
-1. Repository interfeyslari va PostgreSQL migrations.
-2. User/device auth va haqiqiy actor ID.
-3. Queue worker hamda transactional outbox.
-4. MCP SDK remote transport, OAuth broker va tool discovery.
-5. OpenAPI schema va generated clients.
-6. Audit hash-chain va retention.
+1. Queue worker hamda transactional outbox.
+2. Device registration, session management UI va passkey.
+3. MCP SDK remote transport, OAuth broker va tool discovery.
+4. OpenAPI schema va generated clients.
+5. Audit hash-chain, retention va PostgreSQL RLS hardening.
