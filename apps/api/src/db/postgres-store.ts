@@ -104,6 +104,16 @@ export class PostgresStore implements Persistence {
       [result.executionId, planId, result, result.completedAt],
     );
   }
+  async listExecutions(
+    planId: string,
+    actorId: string,
+  ): Promise<ToolExecutionResult[]> {
+    const { rows } = await this.pool.query(
+      "SELECT e.document FROM executions e JOIN plans p ON p.id=e.plan_id WHERE e.plan_id=$1 AND p.actor_id=$2 ORDER BY e.created_at",
+      [planId, actorId],
+    );
+    return rows.map((row) => row.document as ToolExecutionResult);
+  }
   async appendAudit(event: AuditEvent): Promise<void> {
     await this.pool.query(
       "INSERT INTO audit_events (id,actor_id,command_id,plan_id,step_id,event_type,metadata,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)",

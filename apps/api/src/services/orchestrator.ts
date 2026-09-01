@@ -1,8 +1,10 @@
 import type {
+  Artifact,
   AuditEvent,
   CommandInput,
   CommandResult,
   ExecutionPlan,
+  ToolExecutionResult,
 } from "@jravis/contracts";
 import { evaluateCapability } from "@jravis/policy-engine";
 import { McpGateway } from "@jravis/mcp-gateway";
@@ -60,6 +62,12 @@ export class Orchestrator {
   getAudit(actorId: string): Promise<AuditEvent[]> {
     return this.store.listAudit(actorId);
   }
+  getExecutions(
+    actorId: string,
+    planId: string,
+  ): Promise<ToolExecutionResult[]> {
+    return this.store.listExecutions(planId, actorId);
+  }
 
   async decide(
     actorId: string,
@@ -98,6 +106,7 @@ export class Orchestrator {
   ): Promise<ExecutionPlan> {
     plan.status = "running";
     await this.store.savePlan(plan, actorId);
+    const upstreamArtifacts: Artifact[] = [];
     for (const step of plan.steps) {
       try {
         step.status = "running";
@@ -106,12 +115,16 @@ export class Orchestrator {
         });
         const result = await this.gateway.execute(
           step.capability.name,
-          step.input,
+          {
+            ...step.input,
+            upstreamArtifacts: structuredClone(upstreamArtifacts),
+          },
           `${plan.id}:${step.id}`,
         );
         if (!result.verified)
           throw new Error("Provider result was not verified");
         await this.store.addExecution(plan.id, result);
+        upstreamArtifacts.push(...result.artifacts);
         step.status = "succeeded";
         await this.audit(actorId, "tool.succeeded", plan, step.id, {
           capability: step.capability.name,

@@ -1,23 +1,57 @@
 import { z } from "zod";
 
 export const commandSourceSchema = z.enum(["text", "voice"]);
-export const intentKindSchema = z.enum(["task", "reminder", "note", "automation", "media", "message"]);
+export const intentKindSchema = z.enum([
+  "task",
+  "reminder",
+  "note",
+  "automation",
+  "media",
+  "message",
+]);
 export const riskLevelSchema = z.enum(["L0", "L1", "L2", "L3", "L4", "L5"]);
-export const approvalModeSchema = z.enum(["DENY", "ASK_ONCE", "ASK_EVERY_TIME", "ALLOW_SESSION", "ALLOW_RULE"]);
-export const planStatusSchema = z.enum(["clarification_required", "awaiting_approval", "approved", "running", "succeeded", "failed", "denied"]);
+export const executionTargetSchema = z.enum([
+  "local_core",
+  "device_bridge",
+  "remote_mcp",
+]);
+export const dataEgressSchema = z.enum([
+  "none",
+  "metadata_only",
+  "selected_content",
+]);
+export const approvalModeSchema = z.enum([
+  "DENY",
+  "ASK_ONCE",
+  "ASK_EVERY_TIME",
+  "ALLOW_SESSION",
+  "ALLOW_RULE",
+]);
+export const planStatusSchema = z.enum([
+  "clarification_required",
+  "awaiting_approval",
+  "approved",
+  "running",
+  "succeeded",
+  "failed",
+  "denied",
+]);
 
 export const registerInputSchema = z.object({
   name: z.string().trim().min(2).max(100),
   email: z.string().trim().toLowerCase().email().max(254),
-  password: z.string().min(10).max(128)
+  password: z.string().min(10).max(128),
 });
-export const loginInputSchema = z.object({ email: z.string().trim().toLowerCase().email(), password: z.string().min(1).max(128) });
+export const loginInputSchema = z.object({
+  email: z.string().trim().toLowerCase().email(),
+  password: z.string().min(1).max(128),
+});
 
 export const commandInputSchema = z.object({
   text: z.string().trim().min(1).max(4000),
   source: commandSourceSchema.default("text"),
   locale: z.string().trim().min(2).max(35).default("uz-UZ"),
-  timezone: z.string().trim().min(1).max(100).default("Asia/Tashkent")
+  timezone: z.string().trim().min(1).max(100).default("Asia/Tashkent"),
 });
 
 export const capabilitySchema = z.object({
@@ -25,7 +59,9 @@ export const capabilitySchema = z.object({
   version: z.string().regex(/^\d+\.\d+\.\d+$/),
   risk: riskLevelSchema,
   description: z.string().min(1),
-  supportsDryRun: z.boolean()
+  supportsDryRun: z.boolean(),
+  executionTarget: executionTargetSchema,
+  dataEgress: dataEgressSchema,
 });
 
 export const planStepSchema = z.object({
@@ -34,7 +70,14 @@ export const planStepSchema = z.object({
   input: z.record(z.string(), z.unknown()),
   description: z.string().min(1),
   approvalMode: approvalModeSchema,
-  status: z.enum(["pending", "approved", "running", "succeeded", "failed", "denied"])
+  status: z.enum([
+    "pending",
+    "approved",
+    "running",
+    "succeeded",
+    "failed",
+    "denied",
+  ]),
 });
 
 export const executionPlanSchema = z.object({
@@ -45,14 +88,19 @@ export const executionPlanSchema = z.object({
   status: planStatusSchema,
   steps: z.array(planStepSchema).min(1),
   createdAt: z.string().datetime(),
-  expiresAt: z.string().datetime()
+  expiresAt: z.string().datetime(),
 });
 
-export const approvalInputSchema = z.object({ approved: z.boolean(), confirmationText: z.string().max(500).optional() });
+export const approvalInputSchema = z.object({
+  approved: z.boolean(),
+  confirmationText: z.string().max(500).optional(),
+});
 
 export type CommandInput = z.infer<typeof commandInputSchema>;
 export type IntentKind = z.infer<typeof intentKindSchema>;
 export type RiskLevel = z.infer<typeof riskLevelSchema>;
+export type ExecutionTarget = z.infer<typeof executionTargetSchema>;
+export type DataEgress = z.infer<typeof dataEgressSchema>;
 export type ApprovalMode = z.infer<typeof approvalModeSchema>;
 export type Capability = z.infer<typeof capabilitySchema>;
 export type PlanStep = z.infer<typeof planStepSchema>;
@@ -61,7 +109,12 @@ export type ApprovalInput = z.infer<typeof approvalInputSchema>;
 export type RegisterInput = z.infer<typeof registerInputSchema>;
 export type LoginInput = z.infer<typeof loginInputSchema>;
 
-export type User = { id: string; name: string; email: string; createdAt: string };
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+};
 export type AuthResult = { token: string; expiresAt: string; user: User };
 export type BrainDecision = {
   intent: IntentKind;
@@ -73,11 +126,40 @@ export type BrainDecision = {
   clarificationQuestion?: string;
 };
 
-export type CommandResult = { id: string; plan: ExecutionPlan; brain: BrainDecision; status: "planned" | "clarification_required"; createdAt: string };
-export type ToolExecutionResult = { executionId: string; provider: string; output: Record<string, unknown>; verified: boolean; completedAt: string };
+export type CommandResult = {
+  id: string;
+  plan: ExecutionPlan;
+  brain: BrainDecision;
+  status: "planned" | "clarification_required";
+  createdAt: string;
+};
+export type Artifact = {
+  id: string;
+  kind: "video" | "image" | "audio" | "document" | "receipt";
+  mimeType: string;
+  uri: string;
+  expiresAt?: string;
+};
+export type ToolExecutionResult = {
+  executionId: string;
+  provider: string;
+  output: Record<string, unknown>;
+  artifacts: Artifact[];
+  verified: boolean;
+  completedAt: string;
+};
 export type AuditEvent = {
   id: string;
-  type: "auth.registered" | "auth.login" | "auth.logout" | "command.created" | "plan.approved" | "plan.denied" | "tool.started" | "tool.succeeded" | "tool.failed";
+  type:
+    | "auth.registered"
+    | "auth.login"
+    | "auth.logout"
+    | "command.created"
+    | "plan.approved"
+    | "plan.denied"
+    | "tool.started"
+    | "tool.succeeded"
+    | "tool.failed";
   actorId: string;
   commandId?: string;
   planId?: string;

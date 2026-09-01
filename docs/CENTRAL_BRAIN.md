@@ -29,8 +29,8 @@ Text ─────────────────┘                     
 | Signal | Natija |
 |---|---|
 | Telegram/xabar va `@username` | `messaging.telegram.send` |
-| Rasm/video + Instagram | `media.render_video` → `social.instagram.publish` |
-| Galereya/rasm/video | `media.render_video` |
+| Rasm/video + Instagram | `media.video.generate` (remote MCP) → `social.instagram.publish` (remote MCP) |
+| Galereya/rasm/video | `media.video.generate` (remote MCP) |
 | Budilnik/eslatma + `HH:mm` | `clock.alarm.create` |
 | “har safar/agar” | `automation.create` |
 | Qayd/saqla | `notes.create` |
@@ -52,3 +52,7 @@ Recipient, vaqt yoki intent yetishmasa plan `clarification_required` bo‘ladi v
 - Fake MCP faqat simulyatsiya qiladi; real servis amali yo‘q.
 - Web tokeni `sessionStorage`da; production’da same-origin BFF + HttpOnly Secure cookie kerak.
 - Routing deterministik v1; AI adapter hali ulanmagan.
+
+## MCP-first execution
+
+Central Brain faqat qaysi capability kerakligini tanlaydi. Video generatsiya Jravis processida bajarilmaydi. User tasdiqlagan media tashqi AI video MCP’ga yuboriladi; MCP `Artifact` (`video/mp4`, URI, expiry) qaytaradi. Jravis artifact metadata’sini saqlaydi, preview uchun klientga beradi va keyingi publish MCP qadamiga uzatadi.

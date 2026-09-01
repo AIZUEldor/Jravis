@@ -73,6 +73,14 @@ export class MemoryStore implements Persistence {
       structuredClone(result),
     ]);
   }
+  async listExecutions(
+    planId: string,
+    actorId: string,
+  ): Promise<ToolExecutionResult[]> {
+    return this.owners.get(planId) === actorId
+      ? structuredClone(this.executions.get(planId) ?? [])
+      : [];
+  }
   async appendAudit(event: AuditEvent): Promise<void> {
     this.events.push(structuredClone(event));
   }

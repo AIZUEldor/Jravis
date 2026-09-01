@@ -53,7 +53,7 @@ Provider nomiga emas, versionlangan imkoniyat kontraktiga bog‘lanadi:
 
 ```text
 media.search             media.read_selected
-media.render_video       social.instagram.publish
+media.video.generate     social.instagram.publish
 clock.alarm.create       messaging.telegram.send
 files.read_selected      calendar.event.create
 ```
@@ -76,6 +76,14 @@ Har capability JSON Schema, kerakli ruxsat, risk, tasdiq turi va `dry-run` imkon
 - Qisman xatoda rollback yoki kompensatsiya; natija post/message/alarm ID bilan verify qilinadi.
 - Working memory, user-approved personal memory va execution history alohida saqlanadi.
 - Semantik xotira shifrlanadi; user uni ko‘rishi, tahrirlashi, eksport va o‘chirishi mumkin.
+
+### Artifact Broker
+
+- Video, rasm, audio va document yaratish Jravis core ichida bajarilmaydi.
+- User tanlagan input assetlar consent’dan so‘ng remote MCP providerga vaqtinchalik signed URL yoki stream orqali beriladi.
+- Provider tayyor natijani `Artifact` manifesti sifatida qaytaradi: `id`, `kind`, `mimeType`, `uri`, `expiresAt`.
+- Jravis natijani malware/type/size tekshiruvidan o‘tkazadi, preview qiladi va keyingi MCP qadamiga reference sifatida beradi.
+- Provider input va output retention muddatini e’lon qilishi shart; muddat tugaganda artifact revoke/tozalanadi.
 
 ## Platforma chegaralari
 
@@ -109,7 +117,7 @@ Android Accessibility API umumiy avtonom AI boshqaruvi uchun ishlatilmaydi. Goog
 
 1. `media.search(date=today)`; scope yetishmasa system picker.
 2. Tanlangan rasmlar preview’si.
-3. `media.render_video` lokal yoki ishonchli MCP’da vaqtinchalik asset yaratadi.
+3. `media.video.generate` tashqi AI video MCP’da vaqtinchalik artifact yaratadi; Jravis video yasamaydi.
 4. Video, caption va account preview qilinadi.
 5. Foydalanuvchi aynan shu publish’ni tasdiqlaydi.
 6. `social.instagram.publish` rasmiy API orqali bajariladi.
@@ -145,4 +153,3 @@ Mobil secretlar Keychain/Keystore’da, server secretlari KMS/Vault’da. Tenant
 - UI scraping’ni asosiy integratsiya qilish.
 - Accessibility orqali avtonom rejalash va umumiy qurilma boshqaruvi.
 - Ishonchsiz MCP’ga butun galereya, fayl tizimi yoki kontaktlarni ochish.
-

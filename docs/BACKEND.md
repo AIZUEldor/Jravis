@@ -50,19 +50,20 @@ Invoke-RestMethod -Method Post -Uri "http://localhost:4000/v1/plans/$planId/deci
 
 ## Endpointlar
 
-| Method | Path | Maqsad |
-|---|---|---|
-| GET | `/health` | Liveness |
-| GET | `/ready` | Provider readiness |
-| POST | `/v1/auth/register` | Development hisob yaratish |
-| POST | `/v1/auth/login` | Opaque session olish |
-| GET | `/v1/auth/me` | Joriy user |
-| POST | `/v1/auth/logout` | Session revoke |
-| POST | `/v1/commands` | Buyruqni validation va plan qilish |
-| GET | `/v1/plans` | Development plan ro‘yxati |
-| GET | `/v1/plans/:planId` | Plan preview |
-| POST | `/v1/plans/:planId/decision` | Approve/deny va execution |
-| GET | `/v1/audit-events` | Development audit tarixi |
+| Method | Path                           | Maqsad                                |
+| ------ | ------------------------------ | ------------------------------------- |
+| GET    | `/health`                      | Liveness                              |
+| GET    | `/ready`                       | Provider readiness                    |
+| POST   | `/v1/auth/register`            | Development hisob yaratish            |
+| POST   | `/v1/auth/login`               | Opaque session olish                  |
+| GET    | `/v1/auth/me`                  | Joriy user                            |
+| POST   | `/v1/auth/logout`              | Session revoke                        |
+| POST   | `/v1/commands`                 | Buyruqni validation va plan qilish    |
+| GET    | `/v1/plans`                    | Development plan ro‘yxati             |
+| GET    | `/v1/plans/:planId`            | Plan preview                          |
+| POST   | `/v1/plans/:planId/decision`   | Approve/deny va execution             |
+| GET    | `/v1/plans/:planId/executions` | MCP natijalari va qaytgan artifactlar |
+| GET    | `/v1/audit-events`             | Development audit tarixi              |
 
 ## Keyingi implementatsiya tartibi
 

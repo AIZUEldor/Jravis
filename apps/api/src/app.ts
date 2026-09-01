@@ -7,7 +7,7 @@ import {
   registerInputSchema,
   type User,
 } from "@jravis/contracts";
-import { createFakeProvider, McpGateway } from "@jravis/mcp-gateway";
+import { createDevelopmentProviders, McpGateway } from "@jravis/mcp-gateway";
 import { Orchestrator } from "./services/orchestrator.js";
 import { AuthService } from "./services/auth.js";
 import type { Persistence } from "./services/persistence.js";
@@ -22,7 +22,9 @@ export async function buildApp(options: AppOptions = {}) {
   });
   const persistence = options.persistence ?? createPersistence();
   const gateway = new McpGateway();
-  gateway.register(createFakeProvider());
+  createDevelopmentProviders().forEach((provider) =>
+    gateway.register(provider),
+  );
   const orchestrator = new Orchestrator(persistence, gateway);
   const auth = new AuthService(persistence);
   app.addHook("onClose", async () => persistence.close());
@@ -39,7 +41,7 @@ export async function buildApp(options: AppOptions = {}) {
   app.get("/ready", async (_request, reply) => {
     try {
       await persistence.ping();
-      return { status: "ready", providers: ["fake.local"] };
+      return { status: "ready", providers: gateway.providerIds() };
     } catch {
       return reply.code(503).send({ status: "not_ready" });
     }
@@ -48,15 +50,13 @@ export async function buildApp(options: AppOptions = {}) {
   app.post("/v1/auth/register", async (request, reply) => {
     const parsed = registerInputSchema.safeParse(request.body);
     if (!parsed.success)
-      return reply
-        .code(400)
-        .send({
-          error: {
-            code: "VALIDATION_ERROR",
-            message: "Invalid registration",
-            details: parsed.error.flatten(),
-          },
-        });
+      return reply.code(400).send({
+        error: {
+          code: "VALIDATION_ERROR",
+          message: "Invalid registration",
+          details: parsed.error.flatten(),
+        },
+      });
     try {
       return reply.code(201).send(await auth.register(parsed.data));
     } catch (error) {
@@ -70,11 +70,9 @@ export async function buildApp(options: AppOptions = {}) {
   app.post("/v1/auth/login", async (request, reply) => {
     const parsed = loginInputSchema.safeParse(request.body);
     if (!parsed.success)
-      return reply
-        .code(400)
-        .send({
-          error: { code: "VALIDATION_ERROR", message: "Invalid login" },
-        });
+      return reply.code(400).send({
+        error: { code: "VALIDATION_ERROR", message: "Invalid login" },
+      });
     try {
       return await auth.login(
         parsed.data,
@@ -92,11 +90,9 @@ export async function buildApp(options: AppOptions = {}) {
     const user = await actor(request.headers.authorization);
     return user
       ? user
-      : reply
-          .code(401)
-          .send({
-            error: { code: "UNAUTHORIZED", message: "Authentication required" },
-          });
+      : reply.code(401).send({
+          error: { code: "UNAUTHORIZED", message: "Authentication required" },
+        });
   });
 
   app.post("/v1/auth/logout", async (request, reply) => {
@@ -107,22 +103,18 @@ export async function buildApp(options: AppOptions = {}) {
   app.post("/v1/commands", async (request, reply) => {
     const user = await actor(request.headers.authorization);
     if (!user)
-      return reply
-        .code(401)
-        .send({
-          error: { code: "UNAUTHORIZED", message: "Authentication required" },
-        });
+      return reply.code(401).send({
+        error: { code: "UNAUTHORIZED", message: "Authentication required" },
+      });
     const parsed = commandInputSchema.safeParse(request.body);
     if (!parsed.success)
-      return reply
-        .code(400)
-        .send({
-          error: {
-            code: "VALIDATION_ERROR",
-            message: "Invalid command",
-            details: parsed.error.flatten(),
-          },
-        });
+      return reply.code(400).send({
+        error: {
+          code: "VALIDATION_ERROR",
+          message: "Invalid command",
+          details: parsed.error.flatten(),
+        },
+      });
     return reply
       .code(202)
       .send(await orchestrator.createCommand(user.id, parsed.data));
@@ -143,11 +135,9 @@ export async function buildApp(options: AppOptions = {}) {
       const plan = await orchestrator.getPlan(user.id, request.params.planId);
       return plan
         ? plan
-        : reply
-            .code(404)
-            .send({
-              error: { code: "PLAN_NOT_FOUND", message: "Plan not found" },
-            });
+        : reply.code(404).send({
+            error: { code: "PLAN_NOT_FOUND", message: "Plan not found" },
+          });
     },
   );
 
@@ -159,11 +149,9 @@ export async function buildApp(options: AppOptions = {}) {
         return reply.code(401).send({ error: { code: "UNAUTHORIZED" } });
       const parsed = approvalInputSchema.safeParse(request.body);
       if (!parsed.success)
-        return reply
-          .code(400)
-          .send({
-            error: { code: "VALIDATION_ERROR", message: "Invalid decision" },
-          });
+        return reply.code(400).send({
+          error: { code: "VALIDATION_ERROR", message: "Invalid decision" },
+        });
       try {
         return await orchestrator.decide(
           user.id,
@@ -174,12 +162,23 @@ export async function buildApp(options: AppOptions = {}) {
         const code = error instanceof Error ? error.message : "EXECUTION_ERROR";
         const status =
           code === "PLAN_NOT_FOUND" ? 404 : code === "PLAN_EXPIRED" ? 410 : 409;
-        return reply
-          .code(status)
-          .send({
-            error: { code, message: code.replaceAll("_", " ").toLowerCase() },
-          });
+        return reply.code(status).send({
+          error: { code, message: code.replaceAll("_", " ").toLowerCase() },
+        });
       }
+    },
+  );
+
+  app.get<{ Params: { planId: string } }>(
+    "/v1/plans/:planId/executions",
+    async (request, reply) => {
+      const user = await actor(request.headers.authorization);
+      if (!user)
+        return reply.code(401).send({ error: { code: "UNAUTHORIZED" } });
+      const plan = await orchestrator.getPlan(user.id, request.params.planId);
+      if (!plan)
+        return reply.code(404).send({ error: { code: "PLAN_NOT_FOUND" } });
+      return { data: await orchestrator.getExecutions(user.id, plan.id) };
     },
   );
 

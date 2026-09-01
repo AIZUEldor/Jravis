@@ -1,1 +1,240 @@
-:root{color-scheme:dark;font-family:Inter,ui-sans-serif,system-ui;background:#090b0f;color:#f6f7f9}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 75% 5%,#173d3838,transparent 35%),#090b0f}main{min-height:100vh;display:grid;place-items:center;padding:32px}.hero{width:min(100%,1050px)}header{display:flex;align-items:center;justify-content:space-between}.profile{display:flex;align-items:center;gap:18px;color:#aab3bc}.brand{font-weight:900;letter-spacing:.2em;font-size:18px}.brand span,em{color:#40e0b5;font-style:normal}.eyebrow{margin-top:80px;color:#40e0b5;font-size:12px;font-weight:800;letter-spacing:.2em}h1{font-size:clamp(48px,8vw,96px);line-height:.96;letter-spacing:-.055em;margin:18px 0 28px}h2{font-size:42px;margin:24px 0 8px}.lead{max-width:650px;color:#9aa3ad;font-size:18px;line-height:1.6}form{margin:40px 0;display:flex;gap:12px;background:#11151b;border:1px solid #29313a;border-radius:18px;padding:12px}textarea{flex:1;min-height:72px;resize:none;background:transparent;border:0;outline:0;color:#fff;font:inherit;padding:14px}button{border:0;border-radius:12px;background:#40e0b5;color:#04110e;font-weight:900;padding:0 24px;cursor:pointer}button:disabled{opacity:.6;cursor:wait}.authCard{width:min(100%,520px);padding:36px;border:1px solid #29313a;border-radius:24px;background:#0e1217}.authCard .eyebrow{margin-top:52px}.authForm{flex-direction:column;background:transparent;border:0;padding:0;margin:30px 0 16px}.authForm input{width:100%;padding:17px;border:1px solid #29313a;border-radius:12px;background:#11151b;color:#fff;font:inherit;outline:0}.authForm input:focus{border-color:#40e0b5}.authForm button{padding:18px}.linkButton{background:transparent;color:#8f9aa5;padding:6px;text-decoration:underline}.error{color:#ff8686}.brainResult{margin-top:24px;padding:24px;border:1px solid #29313a;border-radius:18px;background:#0f1419}.brainMeta{display:flex;justify-content:space-between;color:#83909b}.brainMeta b{color:#40e0b5;text-transform:uppercase}.question{font-size:22px}.brainResult ul{list-style:none;padding:0}.brainResult li{display:flex;justify-content:space-between;gap:20px;padding:14px 0;border-bottom:1px solid #202932}.brainResult small{color:#7d8995}.actions{display:flex;justify-content:flex-end;gap:12px;margin-top:24px}.actions button{padding:14px 20px}.actions .deny{background:#242b32;color:#d6dbe0}.status{text-align:right;text-transform:uppercase;font-size:12px;letter-spacing:.16em;color:#84909a}.status.succeeded{color:#40e0b5}@media(max-width:700px){form{flex-direction:column}button{padding:18px}.eyebrow{margin-top:50px}.brainResult li{flex-direction:column}.profile span{display:none}}
+:root {
+  color-scheme: dark;
+  font-family: Inter, ui-sans-serif, system-ui;
+  background: #090b0f;
+  color: #f6f7f9;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 75% 5%, #173d3838, transparent 35%), #090b0f;
+}
+main {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 32px;
+}
+.hero {
+  width: min(100%, 1050px);
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  color: #aab3bc;
+}
+.brand {
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  font-size: 18px;
+}
+.brand span,
+em {
+  color: #40e0b5;
+  font-style: normal;
+}
+.eyebrow {
+  margin-top: 80px;
+  color: #40e0b5;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+}
+h1 {
+  font-size: clamp(48px, 8vw, 96px);
+  line-height: 0.96;
+  letter-spacing: -0.055em;
+  margin: 18px 0 28px;
+}
+h2 {
+  font-size: 42px;
+  margin: 24px 0 8px;
+}
+.lead {
+  max-width: 650px;
+  color: #9aa3ad;
+  font-size: 18px;
+  line-height: 1.6;
+}
+form {
+  margin: 40px 0;
+  display: flex;
+  gap: 12px;
+  background: #11151b;
+  border: 1px solid #29313a;
+  border-radius: 18px;
+  padding: 12px;
+}
+textarea {
+  flex: 1;
+  min-height: 72px;
+  resize: none;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  color: #fff;
+  font: inherit;
+  padding: 14px;
+}
+button {
+  border: 0;
+  border-radius: 12px;
+  background: #40e0b5;
+  color: #04110e;
+  font-weight: 900;
+  padding: 0 24px;
+  cursor: pointer;
+}
+button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.authCard {
+  width: min(100%, 520px);
+  padding: 36px;
+  border: 1px solid #29313a;
+  border-radius: 24px;
+  background: #0e1217;
+}
+.authCard .eyebrow {
+  margin-top: 52px;
+}
+.authForm {
+  flex-direction: column;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 30px 0 16px;
+}
+.authForm input {
+  width: 100%;
+  padding: 17px;
+  border: 1px solid #29313a;
+  border-radius: 12px;
+  background: #11151b;
+  color: #fff;
+  font: inherit;
+  outline: 0;
+}
+.authForm input:focus {
+  border-color: #40e0b5;
+}
+.authForm button {
+  padding: 18px;
+}
+.linkButton {
+  background: transparent;
+  color: #8f9aa5;
+  padding: 6px;
+  text-decoration: underline;
+}
+.error {
+  color: #ff8686;
+}
+.brainResult {
+  margin-top: 24px;
+  padding: 24px;
+  border: 1px solid #29313a;
+  border-radius: 18px;
+  background: #0f1419;
+}
+.brainMeta {
+  display: flex;
+  justify-content: space-between;
+  color: #83909b;
+}
+.brainMeta b {
+  color: #40e0b5;
+  text-transform: uppercase;
+}
+.question {
+  font-size: 22px;
+}
+.brainResult ul {
+  list-style: none;
+  padding: 0;
+}
+.brainResult li {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 14px 0;
+  border-bottom: 1px solid #202932;
+}
+.brainResult small {
+  color: #7d8995;
+}
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+.actions button {
+  padding: 14px 20px;
+}
+.actions .deny {
+  background: #242b32;
+  color: #d6dbe0;
+}
+.status {
+  text-align: right;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: #84909a;
+}
+.status.succeeded {
+  color: #40e0b5;
+}
+.artifact {
+  display: grid;
+  gap: 8px;
+  margin-top: 18px;
+  padding: 18px;
+  border: 1px solid #27594d;
+  border-radius: 12px;
+  background: #0c1b17;
+}
+.artifact div {
+  display: flex;
+  justify-content: space-between;
+}
+.artifact b {
+  color: #40e0b5;
+  text-transform: uppercase;
+}
+.artifact span,
+.artifact small {
+  color: #85918d;
+}
+.artifact code {
+  overflow-wrap: anywhere;
+  color: #b8c8c3;
+}
+@media (max-width: 700px) {
+  form {
+    flex-direction: column;
+  }
+  button {
+    padding: 18px;
+  }
+  .eyebrow {
+    margin-top: 50px;
+  }
+  .brainResult li {
+    flex-direction: column;
+  }
+  .profile span {
+    display: none;
+  }
+}

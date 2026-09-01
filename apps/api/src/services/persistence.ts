@@ -19,6 +19,10 @@ export interface Persistence {
   getPlan(id: string, actorId: string): Promise<ExecutionPlan | undefined>;
   listPlans(actorId: string): Promise<ExecutionPlan[]>;
   addExecution(planId: string, result: ToolExecutionResult): Promise<void>;
+  listExecutions(
+    planId: string,
+    actorId: string,
+  ): Promise<ToolExecutionResult[]>;
   appendAudit(event: AuditEvent): Promise<void>;
   listAudit(actorId: string): Promise<AuditEvent[]>;
   ping(): Promise<void>;

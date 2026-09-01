@@ -143,7 +143,7 @@ docs/
 - Web: Next.js.
 - Desktop: Tauri, mobile oqimi barqarorlashgach.
 - MCP: remote’da OAuth, lokalda OS-secured secrets.
-- Media: imkon qadar lokal; cloud bo‘lsa explicit disclosure.
+- Media generatsiyasi: tashqi AI MCP provider; faqat user tanlagan assetlar explicit disclosure va consent bilan chiqadi.
 - AI provider adapter orqali almashinadi; raw credential modelga berilmaydi.
 
 ## Definition of Done
@@ -165,4 +165,3 @@ docs/
 5. Mobile push-to-talk va Photo Picker spike.
 6. Telegram `send_message` fake adapter bilan E2E.
 7. Threat model va 20 ta abuse-case test.
-
